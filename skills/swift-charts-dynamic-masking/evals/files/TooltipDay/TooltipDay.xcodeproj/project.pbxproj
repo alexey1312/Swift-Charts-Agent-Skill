@@ -1,0 +1,13 @@
+// !$*UTF8*$!
+{
+	objects = {
+		1A2B3C4D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+	};
+}

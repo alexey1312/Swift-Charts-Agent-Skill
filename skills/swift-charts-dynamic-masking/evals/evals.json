@@ -1,0 +1,86 @@
+{
+  "skill_name": "swift-charts-dynamic-masking",
+  "evals": [
+    {
+      "id": 1,
+      "name": "tradingview-scrub-plan",
+      "prompt": "Product wants evals/files/ActivityTrend's chart to work like TradingView: when I drag, everything left of my finger stays at full opacity and the rest gets dimmed. Right now it just cuts the chart off. Give me a plan, don't edit yet.",
+      "expected_output": "A plan with item IDs: stop filtering the data and mask full copies instead, dimmed copy plus masked copy with distinct series, chartXSelection instead of the hand-rolled DragGesture (deployment target 18.0), snap the raw selection to the nearest day, explicit padded x domain with the mask starting at its lower bound, hide the copies from VoiceOver, verification states; each with a source.",
+      "files": [
+        "evals/files/ActivityTrend"
+      ],
+      "expectations": [
+        "Recommends plotting the full data and masking it (ChartContent.mask with a RectangleMark or equivalent) instead of filtering the days up to the touched date.",
+        "Recommends drawing a second, dimmed copy of the line underneath and gives the two line copies distinct series values (or explains that without them Swift Charts joins the copies).",
+        "Recommends replacing the DragGesture in chartOverlay with chartXSelection(value:), noting the deployment target (iOS 18.0) allows it.",
+        "Recommends snapping the raw selection to the nearest data point (or clamping it to the data range) before marks use it.",
+        "Recommends an explicit chartXScale domain, and starts the mask at the domain's or plot's leading edge rather than exactly at the first data point (or otherwise addresses the first and last symbols being cut).",
+        "Cites WWDC23 10037 (Explore pie charts and interactivity in Swift Charts) for chartXSelection or the raw-value matching, with a timestamp.",
+        "Presents the recommendations as items with stable IDs (for example CHART-01) and asks which to apply before editing anything."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "joined-line-and-cut-dots",
+      "prompt": "In evals/files/StepsScrubber, when I touch the chart a straight line shoots from the right end back to the left end, and the first and last dots look cut in half even when I'm not touching. Fix it.",
+      "expected_output": "Distinct series on both LinePlot copies; the mask starts and ends at the plot's edges (padded domain bounds, or no mask when nothing is selected) instead of at the first and last data points; the dimmed copy hidden from accessibility; a typecheck or build attempted and the verification honestly reported.",
+      "files": [
+        "evals/files/StepsScrubber"
+      ],
+      "expectations": [
+        "StepsChart.swift gives the two LinePlot copies different series values (series: .value(...)) so they are not one series.",
+        "StepsChart.swift no longer starts the mask exactly at counts.first?.day and no longer falls back to counts.last?.day; the mask now reaches the plot edges (for example a padded x domain's bounds) or is not applied when nothing is selected.",
+        "StepsChart.swift still plots the full data in both copies (no filtering of counts by the selection).",
+        "The final message explains both causes, in any words: the two copies were one series (so Swift Charts connected them into one line), and the dots were cut because the mask's edges sat on the first and last points.",
+        "The agent typechecked or built the changed file (or states clearly that it could not and why), and does not claim a visual result it did not render."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "ios16-deployment-target",
+      "prompt": "Add the 'dim everything after the finger' effect to the sleep chart in evals/files/SleepChart. Plan only.",
+      "expected_output": "Notes that the package deploys to iOS 16, so LinePlot/AreaPlot (iOS 18) and chartXSelection (iOS 17) need gates; plans ForEach LineMark copies with distinct series plus a mask (iOS 16), a DragGesture in chartOverlay with proxy.value(atX:) for iOS 16, optionally chartXSelection behind if #available(iOS 17, *).",
+      "files": [
+        "evals/files/SleepChart"
+      ],
+      "expectations": [
+        "Identifies the deployment target as iOS 16 (from Package.swift).",
+        "Does not propose LinePlot, AreaPlot or chartXSelection unconditionally; either uses marks and a chartOverlay DragGesture, or gates the newer APIs with if #available and keeps an iOS 16 path.",
+        "Proposes an iOS 16-compatible way to dim the part after the selection: LineMark copies with distinct series values and a mask on the active copy, or an equivalent single-layer approach such as a hard-stop gradient; every API it relies on exists on iOS 16.",
+        "Reports the installed Xcode/SDK version or the result of an SDK availability check.",
+        "No file in the project copy was modified."
+      ]
+    },
+    {
+      "id": 4,
+      "name": "tooltip-wrong-day",
+      "prompt": "The tooltip in evals/files/TooltipDay sometimes says Tuesday but shows Wednesday's mood score. Why, and what's the fix? Plan only.",
+      "expected_output": "The weekday is formatted from the raw selection while the score comes from the nearest entry; past the midpoint between two days they disagree. Fix: read both from the matched entry and place the rule on the entry's date; the raw selection also widens the automatic domain when it leaves the data.",
+      "files": [
+        "evals/files/TooltipDay"
+      ],
+      "expectations": [
+        "Explains that the label formats the raw selection while the value comes from the nearest entry, so past the midpoint between two days they name different days.",
+        "Recommends formatting the date from the matched entry (entry.date) and placing the RuleMark on the entry's date rather than the raw selection.",
+        "Cites WWDC23 10037 around 5:47 (the binding holds the raw value; match it to a data point) or the Swift Charts documentation for chartXSelection.",
+        "No file in the project copy was modified."
+      ]
+    },
+    {
+      "id": 5,
+      "name": "actual-and-forecast-one-line",
+      "prompt": "evals/files/Forecast should draw one line, solid until today and dashed after, but the whole line comes out solid — the forecast part isn't dashed at all. Why, and what's the fix? Plan only.",
+      "expected_output": "The two LinePlots have no series, so Swift Charts draws them as one line in one style and the forecast's dash is lost. Giving them separate series would bring the dash back but leave a gap at today. Fix: plot the full data twice with distinct series and the same interpolation, hide each copy on its side of today (complementary masks, or hard-stop gradients), explicit x domain, hide the dashed copy from VoiceOver.",
+      "files": [
+        "evals/files/Forecast"
+      ],
+      "expectations": [
+        "Explains that the two LinePlots have no series, so Swift Charts treats them as one series and draws one line in one style, which is why the forecast is not dashed.",
+        "Recommends drawing the full data twice and hiding each copy on its side of today (complementary masks, or an equivalent such as hard-stop gradients), rather than only adding a series to the two filtered halves.",
+        "Gives the two copies distinct series values and the same interpolation method.",
+        "Notes that separate series on the two filtered halves would leave a gap (or a break in the curve) at today, or otherwise explains why plotting the halves separately is not enough.",
+        "No file in the project copy was modified."
+      ]
+    }
+  ]
+}

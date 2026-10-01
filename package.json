@@ -1,0 +1,12 @@
+{
+  "name": "swift-charts-agent-skill",
+  "private": true,
+  "description": "Agent Skills for Swift Charts techniques in SwiftUI apps.",
+  "license": "MIT",
+  "keywords": ["pi-package", "agent-skill", "swift-charts", "swiftui", "ios"],
+  "pi": {
+    "skills": [
+      "./skills/swift-charts-dynamic-masking"
+    ]
+  }
+}

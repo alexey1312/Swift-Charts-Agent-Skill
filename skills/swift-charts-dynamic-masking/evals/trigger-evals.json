@@ -1,0 +1,82 @@
+[
+  {
+    "query": "how do I make my swift charts line chart dim everything to the right of where the user is dragging, like tradingview",
+    "should_trigger": true
+  },
+  {
+    "query": "Swift Charts: when I add a second LinePlot of the same data a weird diagonal line goes from the last point back to the first. why?",
+    "should_trigger": true
+  },
+  {
+    "query": "chartXSelection keeps giving me dates before my first data point and the RuleMark makes the whole chart rescale while dragging",
+    "should_trigger": true
+  },
+  {
+    "query": "I mask my LinePlot with a RectangleMark from the first date to the selected date and the first circle symbol is cut in half",
+    "should_trigger": true
+  },
+  {
+    "query": "SwiftUI Charts: highlight the selected range with full opacity and fade the rest, two-finger range selection",
+    "should_trigger": true
+  },
+  {
+    "query": "draw one line in swift charts that's solid up to today and dashed for the forecast, without a gap at today",
+    "should_trigger": true
+  },
+  {
+    "query": "my chart filters the data array on every drag to show only points up to the selection and it's laggy, better way in Swift Charts?",
+    "should_trigger": true
+  },
+  {
+    "query": "the popover annotation on my swift charts selection shows the wrong weekday next to the value",
+    "should_trigger": true
+  },
+  {
+    "query": "how do I do a scrubbing highlight in Swift Charts on iOS 16 without chartXSelection",
+    "should_trigger": true
+  },
+  {
+    "query": "which iOS version do LinePlot, AreaPlot and ChartContent.mask need? my deployment target is 17",
+    "should_trigger": true
+  },
+  {
+    "query": "How do I make a pie chart with SectorMark and an angular selection?",
+    "should_trigger": false
+  },
+  {
+    "query": "Swift Charts: how do I format the x axis labels as abbreviated month names?",
+    "should_trigger": false
+  },
+  {
+    "query": "make my Swift Charts bar chart scroll horizontally and show 30 days at a time",
+    "should_trigger": false
+  },
+  {
+    "query": "build a 3D surface plot with Chart3D in visionOS",
+    "should_trigger": false
+  },
+  {
+    "query": "what's the best chart type to compare revenue across 5 regions?",
+    "should_trigger": false
+  },
+  {
+    "query": "my SwiftUI image mask with a gradient doesn't fade the edges of the photo",
+    "should_trigger": false
+  },
+  {
+    "query": "set up a stock price candlestick chart in React with recharts",
+    "should_trigger": false
+  },
+  {
+    "query": "change the legend position and colors in a Swift Charts line chart with foregroundStyle(by:)",
+    "should_trigger": false
+  },
+  {
+    "query": "matplotlib: shade the area under a curve up to x=5",
+    "should_trigger": false
+  },
+  {
+    "query": "UIKit: animate a CAShapeLayer path stroke from 0 to 1",
+    "should_trigger": false
+  }
+]

@@ -1,0 +1,19 @@
+name: swift-charts-skills
+version: "1.0.0"
+description: >-
+  Build selection-driven highlights in Swift Charts with masks and layered
+  copies of the data, using a read-only scanner, SDK availability checks and
+  approval-gated changes.
+author:
+  name: Aleksei Kakoulin
+  email: alexey1312ru@gmail.com
+repository: https://github.com/alexey1312/Swift-Charts-Agent-Skill
+license: MIT
+logo: assets/logo.svg
+keywords:
+  - swift-charts
+  - charts
+  - swiftui
+  - ios
+skills:
+  - swift-charts-dynamic-masking

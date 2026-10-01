@@ -1,0 +1,14 @@
+{
+  "name": "swift-charts-skills",
+  "version": "1.0.0",
+  "description": "Selection-driven highlighting in Swift Charts with masks and layered copies of the data.",
+  "author": {
+    "name": "Aleksei Kakoulin",
+    "email": "alexey1312ru@gmail.com"
+  },
+  "repository": "https://github.com/alexey1312/Swift-Charts-Agent-Skill",
+  "license": "MIT",
+  "skills": [
+    "./skills/swift-charts-dynamic-masking"
+  ]
+}
