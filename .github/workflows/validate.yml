@@ -16,6 +16,8 @@ jobs:
       - uses: actions/checkout@v7
       - name: Show the toolchain
         run: xcodebuild -version
+      - name: Show the Swift Charts SDK check
+        run: python3 skills/swift-charts-dynamic-masking/scripts/charts_sdk_check.py --platform iphonesimulator
       - name: Compile Python
         run: python3 -m compileall -q scripts skills tests
       - name: Run tests

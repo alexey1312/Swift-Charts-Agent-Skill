@@ -45,6 +45,23 @@ extension Charts::ChartContent {
 """
 
 
+# The iOS 26 SDK's spelling of the same declarations: `.` instead of `::`, no `nonisolated`.
+INTERFACE_26 = """\
+@available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
+@_Concurrency.MainActor @preconcurrency public struct LineMark {
+  public init<X, Y, S>(x: Charts.PlottableValue<X>, y: Charts.PlottableValue<Y>, series: Charts.PlottableValue<S>) where X : Charts.Plottable
+}
+@available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
+extension Charts.ChartContent {
+  public func accessibilityHidden(_ hidden: Swift.Bool) -> some Charts.ChartContent
+}
+@available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
+@_Concurrency.MainActor @preconcurrency public struct RectangleMark {
+  public init<X>(xStart: Charts.PlottableValue<X>, xEnd: Charts.PlottableValue<X>, yStart: CoreFoundation.CGFloat? = nil, yEnd: CoreFoundation.CGFloat? = nil) where X : Charts.Plottable
+}
+"""
+
+
 class AvailabilityTests(unittest.TestCase):
     def setUp(self) -> None:
         self._directory = tempfile.TemporaryDirectory()
@@ -79,6 +96,14 @@ class AvailabilityTests(unittest.TestCase):
     def test_missing_symbol(self) -> None:
         self.assertFalse(self.row("LinePlot")["found"])
 
+    def test_dot_qualified_interface(self) -> None:
+        self.interface.write_text(INTERFACE_26, encoding="utf-8")
+        for name in ("LineMark(x:y:series:)", "ChartContent.accessibilityHidden(_:)", "RectangleMark(xStart:xEnd:yStart:yEnd:)"):
+            with self.subTest(name):
+                row = self.row(name)
+                self.assertTrue(row["found"])
+                self.assertEqual(row["ios"], "16.0")
+
     def test_within_restricts_to_the_named_type(self) -> None:
         symbol = charts_sdk_check.Symbol("other", r"public init<X, Y, S>\(x:", "layer", within="struct RuleMark")
         self.assertFalse(charts_sdk_check.check(self.interface, [symbol])[0]["found"])
@@ -100,7 +125,7 @@ class InstalledSDKTests(unittest.TestCase):
             with self.subTest(row["symbol"]):
                 self.assertTrue(row["found"])
                 self.assertTrue(row["ios"])
-        floors = {row["symbol"]: row["ios"].split(".")[0] for row in rows}
+        floors = {row["symbol"]: (row.get("ios") or "").split(".")[0] for row in rows}
         # The versions the skill's text relies on.
         self.assertEqual(floors["ChartContent.mask(content:)"], "16")
         self.assertEqual(floors["LineMark(x:y:series:)"], "16")

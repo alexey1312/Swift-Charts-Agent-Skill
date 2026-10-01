@@ -37,22 +37,22 @@ class Symbol:
 SYMBOLS: list[Symbol] = [
     # Layers.
     Symbol("LinePlot", r"public struct LinePlot<", "layer", "vectorized line for a whole collection"),
-    Symbol("LinePlot(_:x:y:series:)", r"public init<Data>\(_ data: Data, x: Charts::PlottableProjection<Charts::LinePlot<Content>\.DataElement, some Plottable>, y: [^)]*series:", "layer", "series keeps two copies of one line apart"),
+    Symbol("LinePlot(_:x:y:series:)", r"public init<Data>\(_ data: Data, x: PlottableProjection<LinePlot<Content>\.DataElement, some Plottable>, y: [^)]*series:", "layer", "series keeps two copies of one line apart"),
     Symbol("AreaPlot", r"public struct AreaPlot<", "layer"),
     Symbol("LineMark", r"public struct LineMark\b", "layer"),
-    Symbol("LineMark(x:y:series:)", r"public init<X, Y, S>\(x: Charts::PlottableValue<X>, y: Charts::PlottableValue<Y>, series: Charts::PlottableValue<S>\)", "layer", within="struct LineMark"),
+    Symbol("LineMark(x:y:series:)", r"public init<X, Y, S>\(x: PlottableValue<X>, y: PlottableValue<Y>, series: PlottableValue<S>\)", "layer", within="struct LineMark"),
     Symbol("AreaMark", r"public struct AreaMark\b", "layer"),
     Symbol("RuleMark", r"public struct RuleMark\b", "layer"),
-    Symbol("PlottableProjection.value(_:_:) constant", r"public static func value\(_ label: some StringProtocol, _ value: DataValue\) -> Charts::PlottableProjection", "layer", "a constant in a plot argument, e.g. series: .value(\"Layer\", \"Dimmed\")"),
+    Symbol("PlottableProjection.value(_:_:) constant", r"public static func value\(_ label: some StringProtocol, _ value: DataValue\) -> PlottableProjection", "layer", "a constant in a plot argument, e.g. series: .value(\"Layer\", \"Dimmed\")"),
     # Masking.
     Symbol("ChartContent.mask(content:)", r"public func mask<C>\(", "mask"),
-    Symbol("RectangleMark(xStart:xEnd:yStart:yEnd:)", r"public init<X>\(xStart: Charts::PlottableValue<X>, xEnd: Charts::PlottableValue<X>, yStart: CoreFoundation::CGFloat\? = nil", "mask", "one rectangle, full plot height", within="struct RectangleMark"),
+    Symbol("RectangleMark(xStart:xEnd:yStart:yEnd:)", r"public init<X>\(xStart: PlottableValue<X>, xEnd: PlottableValue<X>, yStart: CGFloat\? = nil", "mask", "one rectangle, full plot height", within="struct RectangleMark"),
     Symbol("RectanglePlot", r"public struct RectanglePlot<", "mask", "one rectangle per element"),
-    Symbol("ChartContent.opacity(_:)", r"public func opacity\(_ value: Swift::Double\) -> some Charts::ChartContent", "layer"),
-    Symbol("ChartContent.accessibilityHidden(_:)", r"public func accessibilityHidden\(_ hidden: Swift::Bool\) -> some Charts::ChartContent", "accessibility"),
-    Symbol("ChartContent.interpolationMethod(_:)", r"public func interpolationMethod\(_ method: Charts::InterpolationMethod\)", "layer"),
+    Symbol("ChartContent.opacity(_:)", r"public func opacity\(_ value: Double\) -> some ChartContent", "layer"),
+    Symbol("ChartContent.accessibilityHidden(_:)", r"public func accessibilityHidden\(_ hidden: Bool\) -> some ChartContent", "accessibility"),
+    Symbol("ChartContent.interpolationMethod(_:)", r"public func interpolationMethod\(_ method: InterpolationMethod\)", "layer"),
     Symbol("ChartContent.alignsMarkStylesWithPlotArea(_:)", r"public func alignsMarkStylesWithPlotArea\(", "layer"),
-    Symbol("ChartContent.zIndex(_:)", r"public func zIndex\(_ value: Swift::Double\) -> some Charts::ChartContent", "layer", "the talk keeps the selection rule behind the lines with a negative zIndex"),
+    Symbol("ChartContent.zIndex(_:)", r"public func zIndex\(_ value: Double\) -> some ChartContent", "layer", "the talk keeps the selection rule behind the lines with a negative zIndex"),
     # Selection.
     Symbol("View.chartXSelection(value:)", r"public func chartXSelection<P>\(value:", "selection"),
     Symbol("View.chartXSelection(range:)", r"public func chartXSelection<P>\(range:", "selection", "two fingers on iOS, drag on macOS"),
@@ -69,6 +69,16 @@ SYMBOLS: list[Symbol] = [
 ]
 
 AVAILABLE = re.compile(r"@available\(([^)]*)\)")
+# Module qualifiers differ between SDKs: the iOS 27 interfaces write `Swift::Bool` and
+# `Charts::ChartContent`, the iOS 26 ones `Swift.Bool` and `Charts.ChartContent`.
+# Patterns are written unqualified and matched against lines with both forms removed.
+QUALIFIER = re.compile(
+    r"\b(?:Swift|Charts|SwiftUI|SwiftUICore|CoreFoundation|CoreGraphics|Foundation|_Concurrency|Spatial)(?:::|\.)(?=[A-Za-z_])"
+)
+
+
+def unqualified(line: str) -> str:
+    return QUALIFIER.sub("", line)
 IOS_VERSION = re.compile(r"\biOS (\d+(?:\.\d+)*)")
 IOS_DEPRECATED = re.compile(r"\biOS, (?:introduced: [\d.]+, )?deprecated(?:: ([\d.]+))?")
 
@@ -141,7 +151,7 @@ def availability(lines: list[str], index: int) -> dict:
 
 
 def check(interface: Path, symbols: list[Symbol]) -> list[dict]:
-    lines = interface.read_text(encoding="utf-8", errors="replace").splitlines()
+    lines = [unqualified(line) for line in interface.read_text(encoding="utf-8", errors="replace").splitlines()]
     rows = []
     for symbol in symbols:
         pattern = re.compile(symbol.pattern)
