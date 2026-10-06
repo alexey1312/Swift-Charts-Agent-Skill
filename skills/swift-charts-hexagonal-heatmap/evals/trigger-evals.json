@@ -1,0 +1,82 @@
+[
+  {
+    "query": "turn my swift charts scatter of 50k earthquake points into a hexagonal heatmap like the nil coalescing post",
+    "should_trigger": true
+  },
+  {
+    "query": "hexbin chart in SwiftUI Charts — how do I make hexagon symbols tile without gaps?",
+    "should_trigger": true
+  },
+  {
+    "query": "my custom ChartSymbolShape hexagons have white gaps between them and the rows don't line up in Swift Charts",
+    "should_trigger": true
+  },
+  {
+    "query": "Swift Charts PointPlot with a custom hexagon symbol: what symbolSize makes neighbouring cells touch?",
+    "should_trigger": true
+  },
+  {
+    "query": "how do I convert longitude/latitude to axial q r hex coordinates and count points per cell for a Swift Charts heat map",
+    "should_trigger": true
+  },
+  {
+    "query": "chartForegroundStyleScale with a gradient for counts in my hex heatmap: every cell except two looks the same color",
+    "should_trigger": true
+  },
+  {
+    "query": "my Swift Charts map of check-ins is squeezed into a corner and the x axis goes from 0 to 200",
+    "should_trigger": true
+  },
+  {
+    "query": "density plot for heavily overlapping scatter points in Swift Charts on iOS 16, hexagon cells colored by count",
+    "should_trigger": true
+  },
+  {
+    "query": "what does perceptualUnitRect do on a hexagon ChartSymbolShape, my hexagons look too wide",
+    "should_trigger": true
+  },
+  {
+    "query": "some points land in the wrong hexagon when I round q and r in my Swift hexbin code",
+    "should_trigger": true
+  },
+  {
+    "query": "make my swift charts line chart dim everything to the right of my finger, like tradingview",
+    "should_trigger": false
+  },
+  {
+    "query": "build a GitHub-style calendar heatmap of commits with RectangleMark in Swift Charts, weeks by weekdays",
+    "should_trigger": false
+  },
+  {
+    "query": "add a heatmap overlay of user locations to my MKMapView with MapKit",
+    "should_trigger": false
+  },
+  {
+    "query": "plot a 3D surface of a function with Chart3D on visionOS",
+    "should_trigger": false
+  },
+  {
+    "query": "matplotlib hexbin with a log color scale and a colorbar in python",
+    "should_trigger": false
+  },
+  {
+    "query": "d3-hexbin radius for a react dashboard of store visits",
+    "should_trigger": false
+  },
+  {
+    "query": "how do I color bars by category in a Swift Charts bar chart",
+    "should_trigger": false
+  },
+  {
+    "query": "draw a honeycomb pattern background with SwiftUI Canvas for my app's onboarding screen",
+    "should_trigger": false
+  },
+  {
+    "query": "chartXSelection keeps giving me dates before my first data point",
+    "should_trigger": false
+  },
+  {
+    "query": "pie chart with SectorMark and an angular inset between slices",
+    "should_trigger": false
+  }
+]

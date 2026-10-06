@@ -3,26 +3,35 @@
 This repository contains Agent Skills that advise on and change Swift Charts code in iOS apps.
 
 - **Phase 1 stays read-only.**
-  `charts_scan.py` and `charts_sdk_check.py` must never write to the scanned project
-  or the SDK; `test_scan_does_not_modify_files` guards the scanner.
+  The scanners (`charts_scan.py`, `heatmap_scan.py`) and the SDK checks
+  (`charts_sdk_check.py`, `heatmap_sdk_check.py`) must never write to the scanned project
+  or the SDK; `test_scan_does_not_modify_files` guards each scanner.
 - **Every rule cites a source.**
   A scanner rule's `source` names a session and timestamp (`WWDC23 10037 … m:ss`),
   an Apple documentation page (`Apple documentation › …`),
-  or the probe (`Measured: scripts/probes/masking_probe.swift §n`);
+  or the skill's probe (`Measured: scripts/probes/<probe>.swift §n`);
   the metadata test enforces it.
 - **Measurements outrank posts.**
   A *Measured* statement in a skill must be re-derivable by running
-  `scripts/probes/masking_probe.swift`.
-  Change the probe and `measured-behavior.md` together.
+  that skill's probe — `scripts/probes/masking_probe.swift`
+  or `scripts/probes/hexagon_probe.swift`.
+  Change the probe and the skill's `measured-behavior.md` together.
 - **The SDK outranks samples.**
   Every Swift block in `skills/*/references/*.md` starts with
   `// typecheck: ios<N>` and must compile for iOS N and fail for iOS N−1
   (`python3 scripts/typecheck_samples.py`).
+  `// typecheck: ios<N>.<M>` checks a point release the same way.
   A block that cannot be complete does not belong in a reference.
 - **The skill's own code scans clean.**
   `OwnAdviceTests` scans every reference block; only `info` findings may remain.
 - **Scanner changes need tests** for a positive and a negative case,
-  and a row in `CHECKS.md`.
+  and a row in the skill's section of `CHECKS.md`.
+- **Shared code stays shared.**
+  Each skill ships standalone, so the heatmap scripts copy the masking scripts'
+  parsing and SDK helpers;
+  `tests/test_heatmap_scan.py` and `tests/test_heatmap_sdk_check.py` fail when the
+  copies drift.
+  Change both copies together.
 - **Behavior changes need evals.**
   Each skill keeps skill-creator evals in `skills/<skill>/evals/`
   (`evals.json` with fixture projects under `files/`, and `trigger-evals.json`).
@@ -32,9 +41,9 @@ This repository contains Agent Skills that advise on and change Swift Charts cod
 - **Keep SKILL.md descriptions under 1024 characters**
   and the `name` equal to the directory name.
 - **Rewrite, don't copy.**
-  The article and its gist carry no licence;
-  code here is written for this repository and credits the article as the origin
-  of the technique.
+  The articles and their gists carry no licence;
+  code here is written for this repository and credits each article as the origin
+  of its technique.
 - Keep the plugin version identical in `.claude-plugin/plugin.json`,
   `.claude-plugin/marketplace.json`, `.cursor-plugin/plugin.json` and
   `agents/openai.yaml`.

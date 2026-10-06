@@ -63,6 +63,13 @@ EDIT_FOCUS: dict[str, list] = {
         LAST,
         TRACE,
     ],
+    "gaps-and-overlapping-rows": [
+        file_focus("HexGaps/Sources/HexGaps/QuakeHexMap.swift"),
+        file_focus("HexGaps/Sources/HexGaps/QuakeHexMap.swift"),
+        file_focus("HexGaps/Sources/HexGaps/QuakeHexMap.swift"),
+        LAST,
+        TRACE,
+    ],
 }
 
 JUDGE_PREAMBLE = (
@@ -80,6 +87,14 @@ FILE_CHECKS: dict[str, list[tuple[str, str, str]]] = {
         ("StepsScrubber/StepsScrubber/StepsChart.swift", r"series\s*:[\s\S]*series\s*:", "contains"),
         # The data is still plotted whole, never filtered by the selection.
         ("StepsScrubber/StepsScrubber/StepsChart.swift", r"\.filter\s*\{", "not_contains"),
+    ],
+    "gaps-and-overlapping-rows": [
+        # The area from the cell width, squared, is gone.
+        ("HexGaps/Sources/HexGaps/QuakeHexMap.swift", r"\*\s*0\.92", "not_contains"),
+        # Each hexagon sized by a CGSize, or the plot's ratio locked.
+        ("HexGaps/Sources/HexGaps/QuakeHexMap.swift", r"CGSize\(|aspectRatio\(", "contains"),
+        # The color scale survived.
+        ("HexGaps/Sources/HexGaps/QuakeHexMap.swift", r"symmetricLog", "contains"),
     ],
 }
 

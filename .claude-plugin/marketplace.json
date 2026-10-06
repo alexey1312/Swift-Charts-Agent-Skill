@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/refs/heads/main/marketplace/marketplace.schema.json",
   "name": "swift-charts-skills",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "owner": {
     "name": "Aleksei Kakoulin",
     "email": "alexey1312ru@gmail.com"
@@ -12,16 +12,16 @@
   "plugins": [
     {
       "name": "swift-charts-skills",
-      "description": "Build selection-driven highlights in Swift Charts with masks and layered copies of the data, grounded in Apple's sessions and measured renders.",
+      "description": "Build selection-driven highlights and hexagonal heatmaps in Swift Charts, grounded in Apple's sessions and measured renders.",
       "repository": "https://github.com/alexey1312/Swift-Charts-Agent-Skill",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "author": {
         "name": "Aleksei Kakoulin",
         "email": "alexey1312ru@gmail.com"
       },
       "license": "MIT",
       "category": "development",
-      "keywords": ["swift-charts", "charts", "swiftui", "ios", "data-visualization"],
+      "keywords": ["swift-charts", "charts", "swiftui", "ios", "heatmap", "data-visualization"],
       "tags": ["ios", "swift-charts", "swiftui", "agent-skill"],
       "source": "./"
     }

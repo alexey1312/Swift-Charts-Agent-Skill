@@ -27,6 +27,13 @@ def frontmatter(skill: str) -> dict[str, str]:
     return fields
 
 
+def checks_section(skill: str) -> str:
+    """The part of CHECKS.md under `## <skill>`, up to the next skill's heading."""
+    text = (ROOT / "CHECKS.md").read_text(encoding="utf-8")
+    match = re.search(r"^## " + re.escape(skill) + r"\n(.*?)(?=^## |\Z)", text, re.M | re.S)
+    return match.group(1) if match else ""
+
+
 class ManifestTests(unittest.TestCase):
     def test_json_manifests_parse(self) -> None:
         for relative in (
@@ -100,16 +107,26 @@ class SkillTests(unittest.TestCase):
                         self.assertTrue(name in names or (ROOT / name).is_file(), name)
 
     def test_measured_sections_exist(self) -> None:
-        pattern = re.compile(r"measured-behavior\.md` §(\d)|\(\*Measured\* §(\d)")
+        pattern = re.compile(r"measured-behavior\.md` §(\d+)|\(\*Measured\* §(\d+)")
         for skill in SKILLS:
             directory = ROOT / "skills" / skill
             measured = (directory / "references" / "measured-behavior.md").read_text(encoding="utf-8")
-            sections = set(re.findall(r"^## §(\d)", measured, re.M))
-            for document in [directory / "SKILL.md", *sorted((directory / "references").glob("*.md")), ROOT / "CHECKS.md"]:
-                for match in pattern.findall(document.read_text(encoding="utf-8")):
+            sections = set(re.findall(r"^## §(\d+)", measured, re.M))
+            documents = [
+                (path.name, path.read_text(encoding="utf-8"))
+                for path in [directory / "SKILL.md", *sorted((directory / "references").glob("*.md"))]
+            ]
+            documents.append(("CHECKS.md", checks_section(skill)))
+            for name, text in documents:
+                for match in pattern.findall(text):
                     section = match[0] or match[1]
-                    with self.subTest(file=document.name, section=section):
+                    with self.subTest(skill=skill, file=name, section=section):
                         self.assertIn(section, sections)
+
+    def test_checks_has_a_section_per_skill(self) -> None:
+        for skill in SKILLS:
+            with self.subTest(skill):
+                self.assertIn("### Automated", checks_section(skill))
 
 
 class EvalTests(unittest.TestCase):

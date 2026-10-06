@@ -22,13 +22,20 @@ class ExtractionTests(unittest.TestCase):
             path.write_text(
                 "```swift\n// typecheck: ios18\nlet a = 1\n```\n"
                 "```swift\n// typecheck: ios18, continues the block above\nlet b = a\n```\n"
-                "```swift\nlet fragment = 1\n```\n",
+                "```swift\nlet fragment = 1\n```\n"
+                "```swift\n// typecheck: ios16.4\nlet c = 1\n```\n",
                 encoding="utf-8",
             )
             found = typecheck_samples.samples([path])
-        self.assertEqual([(s.index, s.ios) for s in found], [(1, 18), (2, 18)])
+        self.assertEqual([(s.index, s.version) for s in found], [(1, "18.0"), (2, "18.0"), (4, "16.4")])
         self.assertIn("let a = 1", found[1].code)
         self.assertIn("let b = a", found[1].code)
+
+    def test_the_release_below_a_tag(self) -> None:
+        sample = lambda ios, minor=0: typecheck_samples.Sample(Path("x"), 1, ios, "", minor)  # noqa: E731
+        self.assertEqual(sample(18).below, "17.0")
+        self.assertEqual(sample(16, 4).below, "16.3")
+        self.assertIsNone(sample(16).below)
 
     def test_every_reference_block_is_tagged(self) -> None:
         # A fragment would silently escape the typecheck; references hold complete code.

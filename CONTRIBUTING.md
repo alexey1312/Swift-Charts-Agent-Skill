@@ -5,17 +5,18 @@ Thanks for helping keep these skills accurate.
 ## Good contributions
 
 - **Measurements on iOS.**
-  The probe runs on macOS (`measured-behavior.md` › Scope).
+  The probes run on macOS (each skill's `measured-behavior.md` › Scope).
   A run of the same comparisons on an iOS simulator or device —
   especially of what the built-in selection gesture reports past the plot's edge,
   and of what VoiceOver reads — is the most useful thing missing.
 - **SDK updates.**
-  When a new Xcode ships, run `charts_sdk_check.py` and `scripts/typecheck_samples.py`,
-  update the snapshot in `api-availability.md`, and say which Xcode build you checked.
+  When a new Xcode ships, run each skill's SDK check
+  (`charts_sdk_check.py`, `heatmap_sdk_check.py`) and `scripts/typecheck_samples.py`,
+  update the snapshot in each `api-availability.md`, and say which Xcode build you checked.
 - **Scanner rules.**
-  Add a `Rule` to `charts_scan.py` with a source,
-  a positive and a negative test in `tests/test_charts_scan.py`,
-  and a row in `CHECKS.md`.
+  Add a `Rule` to the skill's scanner with a source,
+  a positive and a negative test in its `tests/test_*_scan.py`,
+  and a row in the skill's section of `CHECKS.md`.
 - **False positives** found on real projects, with a minimal reproduction.
 - **Evals** for behavior the skill gets wrong:
   a case in `skills/<skill>/evals/evals.json` with a small fixture project
@@ -66,6 +67,7 @@ a grader can be wrong as easily as an agent.
 python3 -m unittest discover -s tests -v
 python3 scripts/typecheck_samples.py
 xcrun swiftc -O -suppress-warnings scripts/probes/masking_probe.swift -o "$TMPDIR/masking_probe" && "$TMPDIR/masking_probe"
+xcrun swiftc -O -suppress-warnings scripts/probes/hexagon_probe.swift -o "$TMPDIR/hexagon_probe" && "$TMPDIR/hexagon_probe"
 ```
 
 ## Releasing
@@ -76,7 +78,7 @@ xcrun swiftc -O -suppress-warnings scripts/probes/masking_probe.swift -o "$TMPDI
 2. Tag that commit and push the tag:
 
    ```bash
-   git tag v1.0.0 && git push origin v1.0.0
+   git tag v1.1.0 && git push origin v1.1.0
    ```
 
 The `Release` workflow refuses a tag that does not match the plugin version,

@@ -1,7 +1,7 @@
 {
   "name": "swift-charts-skills",
-  "version": "1.0.0",
-  "description": "Agent Skills for Swift Charts: selection-driven highlighting built from masks and layered copies of the data, with a read-only scanner, an SDK availability check and approval-gated changes.",
+  "version": "1.1.0",
+  "description": "Agent Skills for Swift Charts: selection-driven highlighting built from masks and layered copies of the data, and hexagonal heatmaps whose cells tile, with read-only scanners, SDK availability checks and approval-gated changes.",
   "author": {
     "name": "Aleksei Kakoulin",
     "email": "alexey1312ru@gmail.com"
@@ -15,10 +15,13 @@
     "ios",
     "chartxselection",
     "mask",
+    "heatmap",
+    "hexbin",
     "data-visualization",
     "agent-skill"
   ],
   "skills": [
-    "./skills/swift-charts-dynamic-masking"
+    "./skills/swift-charts-dynamic-masking",
+    "./skills/swift-charts-hexagonal-heatmap"
   ]
 }

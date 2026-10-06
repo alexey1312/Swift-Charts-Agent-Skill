@@ -3,10 +3,11 @@
   "private": true,
   "description": "Agent Skills for Swift Charts techniques in SwiftUI apps.",
   "license": "MIT",
-  "keywords": ["pi-package", "agent-skill", "swift-charts", "swiftui", "ios"],
+  "keywords": ["pi-package", "agent-skill", "swift-charts", "swiftui", "ios", "heatmap"],
   "pi": {
     "skills": [
-      "./skills/swift-charts-dynamic-masking"
+      "./skills/swift-charts-dynamic-masking",
+      "./skills/swift-charts-hexagonal-heatmap"
     ]
   }
 }

@@ -1,0 +1,88 @@
+{
+  "skill_name": "swift-charts-hexagonal-heatmap",
+  "evals": [
+    {
+      "id": 1,
+      "name": "quake-dots-to-hexbin-plan",
+      "prompt": "evals/files/QuakeDots draws every earthquake as its own dot and the map is one unreadable blob. Turn it into a hexagonal heatmap like the Nil Coalescing article, with each cell colored by how many quakes fall in it. Plan first, don't edit.",
+      "expected_output": "A plan with item IDs: bin the quakes once (axial q/r, cube rounding) outside body; one PointPlot per occupied cell with a ChartSymbolShape hexagon that declares perceptualUnitRect; size each hexagon from the measured plot size and both axes' scales (symbolSize(CGSize), not the article's width² × 0.92 area); keep explicit domains and lock the plot area's ratio in chartPlotStyle; clip the plot; color by count with foregroundStyle(by:) and .symmetricLog, legend kept; each item with a source; ask before editing.",
+      "files": [
+        "evals/files/QuakeDots"
+      ],
+      "expectations": [
+        "Recommends binning the quakes into hexagonal cells once, outside the view's body (for example in a model, init or task), using axial q/r coordinates with cube rounding of three coordinates or an equivalent exact nearest-cell rule.",
+        "Recommends drawing one symbol per occupied cell with a custom ChartSymbolShape hexagon that declares perceptualUnitRect.",
+        "Recommends sizing each hexagon from the plot's measured size and both axes' scales (symbolSize with a CGSize, or an area equal to the cell height squared), and does not recommend the article's (cell width)² × 0.92 area without saying it leaves large gaps.",
+        "Keeps explicit x and y domains and locks the plot area's aspect ratio to the domains' ratio (inside chartPlotStyle, or with the axes hidden).",
+        "Recommends coloring cells by count with foregroundStyle(by:) and a symmetric-log or other non-linear color scale, and keeps a color legend.",
+        "Cites at least one Apple session with a timestamp, an Apple documentation page, or a measured result for its recommendations.",
+        "Presents the recommendations as items with stable IDs (for example HEX-01) and asks which to apply before editing anything."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "gaps-and-overlapping-rows",
+      "prompt": "The hexagons in evals/files/HexGaps have wide white gaps between them on iPhone, and on iPad, where the chart is wider, the rows pile on top of each other. Fix it.",
+      "expected_output": "QuakeHexMap sizes each hexagon with a CGSize from both axes' scales (or an area equal to the cell height squared with the plot ratio locked to the domains), reads the full plot size, keeps explicit domains, clipping and the symmetricLog scale; the final message explains that the area sets the hexagon's height and that one area cannot fit both axes when the plot's ratio differs from the domains'; a typecheck or build attempted and reported honestly.",
+      "files": [
+        "evals/files/HexGaps"
+      ],
+      "expectations": [
+        "QuakeHexMap.swift no longer sizes the hexagon as the cell width squared times 0.92: it uses symbolSize with a CGSize computed from both axes' scales, or an area equal to the cell height squared together with a plot ratio locked to the domains.",
+        "QuakeHexMap.swift makes the rows fit at any chart width: each hexagon's height comes from the y scale (the plot's height), or the plot area's aspect ratio is locked to the domains' ratio inside chartPlotStyle.",
+        "QuakeHexMap.swift still has explicit x and y domains, clips the plot, and keeps the symmetricLog color scale.",
+        "The final message explains both causes, in any words: a symbol area sets the hexagon's height, so the width-squared formula makes the cells too small; and with the chart's ratio free, one area cannot match both the horizontal and the vertical spacing.",
+        "The agent typechecked or built the changed file (or states clearly that it could not and why), and does not claim a visual result it did not render."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "map-squeezed-into-a-corner",
+      "prompt": "In evals/files/RainCells the hexagon map of rain gauges is squeezed into the top-right corner of the chart and the hexagons pile on top of each other. Why, and what's the fix? Plan only.",
+      "expected_output": "Without chartXScale/chartYScale domains Swift Charts picks automatic domains that include zero (about 0…200 and −60…0 for New Zealand), so the data fills a corner, while the cell size is computed from the data's own span, so the hexagons are far too big. Fix: explicit domains, cell size from those domains (CGSize per axis), lock the plot ratio in chartPlotStyle, clip the plot; cite WWDC22 10137 or the measured automatic domain.",
+      "files": [
+        "evals/files/RainCells"
+      ],
+      "expectations": [
+        "Explains that without chartXScale and chartYScale domains Swift Charts chooses automatic domains that include zero (for example 0…200 and −60…0), so the data fills only a corner of the plot.",
+        "Explains that the cell size is computed from the data's span while the chart uses a different (automatic) domain, so the hexagons do not match the cell spacing.",
+        "Recommends explicit x and y domains and computing the hexagon size from those same domains, for each axis.",
+        "Recommends locking the plot area's ratio to the domains (in chartPlotStyle, or with hidden axes) or sizing hexagons per axis, and clipping the plot so edge cells stay off the axes.",
+        "Cites WWDC22 10137 (Swift Charts: Raise the bar) for scales or domains with a timestamp, or the measured automatic-domain result."
+      ]
+    },
+    {
+      "id": 4,
+      "name": "ios16-tap-density",
+      "prompt": "Add a hexbin density view to evals/files/TapDensity's tap scatter so we can see where people tap most. We still support iOS 16. Plan only.",
+      "expected_output": "Notes the iOS 16 deployment target from Package.swift; plans ForEach + PointMark (PointPlot and key-path modifiers are iOS 18); a ChartSymbolShape hexagon with perceptualUnitRect; symbolSize(CGSize) from the plot size via onGeometryChange (iOS 16); .symmetricLog gated at iOS 16.4 with a fallback; reports the toolchain or SDK check.",
+      "files": [
+        "evals/files/TapDensity"
+      ],
+      "expectations": [
+        "Identifies the deployment target as iOS 16 (from Package.swift).",
+        "Does not propose PointPlot or key-path modifiers unconditionally; uses ForEach with PointMark, or gates the iOS 18 APIs with if #available and keeps an iOS 16 path.",
+        "Notes that .symmetricLog needs iOS 16.4 and gates it, or uses a linear scale over log counts or another route that works on iOS 16.0.",
+        "Defines a ChartSymbolShape hexagon that implements perceptualUnitRect, or states that the property is required.",
+        "Reports the installed Xcode/SDK version or the result of an SDK availability check.",
+        "No file in the project copy was modified."
+      ]
+    },
+    {
+      "id": 5,
+      "name": "wrong-cells-and-slow-redraws",
+      "prompt": "evals/files/CheckinHex is slow whenever the screen redraws, and some check-ins show up in the hexagon next to the one they belong to. Why? Plan only.",
+      "expected_output": "q and r are rounded on their own, which puts points near cell borders in a neighbor (about one in six in the probe); cube rounding fixes it. The cells are a computed property read by body, so every render regroups every check-in; bin once when the data changes and store the cells. Also: the linear color scale hides low counts and the hidden legend leaves the colors unexplained.",
+      "files": [
+        "evals/files/CheckinHex"
+      ],
+      "expectations": [
+        "Explains that rounding q and r independently assigns points near cell borders to a neighboring cell, and recommends cube rounding (round three coordinates with s = −q − r and rebuild the one with the largest error) or an equivalent nearest-center check.",
+        "Explains that the cells are recomputed in a computed property that body reads on every render, and recommends binning once when the data changes (a stored property, a model, init or task).",
+        "Mentions at least one color issue: the linear scale gives low counts nearly the same color (suggesting symmetricLog or another non-linear scale), or the hidden legend leaves the colors unexplained.",
+        "Cites WWDC24 10155 (Swift Charts: Vectorized and function plots) about avoiding computation during rendering, with a timestamp, or the measured share of points in the wrong cell.",
+        "No file in the project copy was modified."
+      ]
+    }
+  ]
+}
